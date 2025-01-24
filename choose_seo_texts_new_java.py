@@ -20,7 +20,7 @@ def process_model(model, file_to_nick, archive_dir, model_dir, qrel_rankings):
 
         for pos in ["2", "3", "4"]:  
             if os.path.exists(
-                    f"/lv_local/home/user/train_fb_ranker/output_results/ranker_test_results/bot_followup_asrc_{nick}_{pos}.csv"):
+                    f"/lv_local/home/user/train_fb_ranker/output_results/ranker_test_results/bot_followup_comp_{nick}_{pos}.csv"):
                 continue
 
             working_set_file_path = f'{archive_dir}/ws_output_{pos}.txt'
@@ -75,7 +75,7 @@ def process_model(model, file_to_nick, archive_dir, model_dir, qrel_rankings):
                 row['true_rank_promotion'] / (4 - int(pos)) if row['true_rank_promotion'] < 0 else 0, axis=1)
 
             final_df.to_csv(
-                f"/lv_local/home/user/train_fb_ranker/output_results/ranker_test_results/bot_followup_asrc_{nick}_{pos}.csv",
+                f"/lv_local/home/user/train_fb_ranker/output_results/ranker_test_results/bot_followup_comp_{nick}_{pos}.csv",
                 index=False)
         return (model, True)
     except Exception as e:
@@ -88,7 +88,7 @@ if __name__ == '__main__':
     run_command('find /lv_local/home/user/train_fb_ranker/output_results/ranker_test_results/ -type f -exec rm {} +')
     archive_dir = "/lv_local/home/user/train_fb_ranker/archive_test_w2v"
 
-    qrel_rankings = pd.read_csv("feature_data_asrc_t.csv")
+    qrel_rankings = pd.read_csv("feature_data_comp_t.csv")
     qrel_rankings = qrel_rankings[qrel_rankings.docno.str.contains('ROUND')]
     qrel_rankings = qrel_rankings.rename({'docno': 'ID', 'rank': 'true_rank'}, axis=1)
     qrel_rankings['ID'] = qrel_rankings['ID'].apply(lambda x: '-'.join(x.split("-")[2:-1]))
@@ -110,11 +110,11 @@ if __name__ == '__main__':
 
     df = pd.concat(
         [pd.read_csv(file) for file in
-         glob.glob("/lv_local/home/user/train_fb_ranker/output_results/ranker_test_results/bot_followup_asrc_*.csv")],
+         glob.glob("/lv_local/home/user/train_fb_ranker/output_results/ranker_test_results/bot_followup_comp_*.csv")],
         ignore_index=True).sort_values(["round_no", "query_id", "creator"])
 
     df.to_csv(
-        f"/lv_local/home/user/train_fb_ranker/output_results/ranker_test_results/bot_followup_asrc_test_FULL.csv",
+        f"/lv_local/home/user/train_fb_ranker/output_results/ranker_test_results/bot_followup_comp_test_FULL.csv",
         index=False)
 
     df = df[['username', 'true_rank', 'true_rank_promotion', 'true_rank_promotion_scaled']].groupby(
