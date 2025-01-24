@@ -104,7 +104,7 @@ This dataset contains historical ranking data. The format includes:
 ```
 docno, query_id, round_no, username, position, current_document
 ```
-### `feature_data_asrc_t.csv`
+### `feature_data_comp_t.csv`
 Contains ranking features and labels for training. Sample columns:
 ```
 query_id, docno, rank, score, rank_promotion
